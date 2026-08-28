@@ -66,7 +66,7 @@ export function MancalaBoard(props: any) {
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: `${gap}px` }}>
           <div style={{ display: 'flex', gap: `${gap}px` }}>
-            <div style={pocketStyle}>{vakjesSpeler2[5]}</div>
+            <div style={pocketStyle} onClick={() => playMove(1)}>{vakjesSpeler2[5]}</div>
             <div style={pocketStyle}>{vakjesSpeler2[4]}</div>
             <div style={pocketStyle}>{vakjesSpeler2[3]}</div>
             <div style={pocketStyle}>{vakjesSpeler2[2]}</div>

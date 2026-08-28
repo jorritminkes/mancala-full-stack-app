@@ -19,6 +19,14 @@ export function GamePage(props: any) {
   //     alert(e);
   //   }
   // }
+
+  async function playMove(pocketPositie: number) {
+    const response = await fetch('http://localhost:8080/api/game/move/${pocketPositie}', {
+      method: "POST"
+    });
+    const result = await response.json();
+    console.log("Move executed:", result);
+  }
   
   
   // if (!board) return <p>Het bord wordt geladen</p>;
