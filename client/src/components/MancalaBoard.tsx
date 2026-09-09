@@ -39,10 +39,10 @@ export function MancalaBoard(props: any) {
     // fontWeight: 'bold',
     fontSize: '22px',
     // boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.4)'
-  }async function
+  }
 
   async function playMove(pocketPositie: number) {
-      console.log("Clicked pocket")
+      console.log("Clicked pocket");
       try {
           const response = await fetch(`http://localhost:8080/api/game/move/${pocketPositie}`, {
               method: "POST"
