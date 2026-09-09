@@ -25,7 +25,14 @@ public class Facade {
         return ((Pocket) eersteVakje).isSpelAfgelopen();
     }
     
+//    public Optional<Speler> getWinnaar() {
+//        return ((Pocket) eersteVakje).getWinnaar();
+//    }
+
     public Optional<Speler> getWinnaar() {
+        if (!isSpelAfgelopen()) {
+            return Optional.empty();
+        }
         return ((Pocket) eersteVakje).getWinnaar();
     }
 }
