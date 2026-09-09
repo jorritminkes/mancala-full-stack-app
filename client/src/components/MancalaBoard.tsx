@@ -5,7 +5,8 @@ export function MancalaBoard(props: any) {
   // const { bord, klikOpPocket } = props;
   // const stenen = bord.stenenPerVakje;
   const [stenen, setStenen] = useState([4,4,4,4,4,4, 0, 4,4,4,4,4,4, 0]);
-
+  const [isProcessing, setIsProcessing] = useState(false);
+  
   const outerPadding = 20;
   const gap = 20;
   const vakjeWidth = 60;
@@ -24,6 +25,8 @@ export function MancalaBoard(props: any) {
     // fontWeight: 'bold',
     fontSize: '18px',
     // boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.4)'
+    cursor: isProcessing ? 'not-allowed' : 'pointer',
+    opacity: isProcessing ? 0.7 : 1,
   }
   
   const mancalaStyle = {
@@ -42,19 +45,40 @@ export function MancalaBoard(props: any) {
   }
 
   async function playMove(pocketPositie: number) {
-      console.log("Clicked pocket");
-      try {
-          const response = await fetch(`http://localhost:8080/api/game/move/${pocketPositie}`, {
-              method: "POST"
-          });
-          const result = await response.json();
-          console.log("Board updated:", result);
-          setStenen(result.stenenPerVakje);
-      } catch (error) {
-          console.error("Error:", error);
-          alert("Invalid move!")
-      }
+    
+    if (isProcessing) {
+      return;
     }
+    
+    setIsProcessing(true);
+    console.log("Clicked pocket", pocketPositie);
+    try {
+        const response = await fetch(`http://localhost:8080/api/game/move/${pocketPositie}`, {
+            method: "POST"
+        });
+        
+        if (!response.ok) {
+          let errorMessage = "Move rejected!";
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+          } catch {
+            errorMessage = await response.text() || errorMessage;
+          }
+          throw new Error(errorMessage);
+        }
+        
+        const result = await response.json();
+        console.log("Board updated:", result);
+        setStenen(result.stenenPerVakje);
+        
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Invalid move!")
+    } finally {
+      setIsProcessing(false);
+    }
+  }
 
   
 
