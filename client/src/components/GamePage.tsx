@@ -9,7 +9,7 @@ export function GamePage(props: any) {
     <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'sans-serif' }}>
       {/* <h1>Speler {spelerAanDeBeurt} is aan de beurt</h1> */}
       
-      <div style = {{ marginTop: '50px', marginBottom: '50px' }}>
+      <div style = {{ marginTop: '50px', marginBottom: '20px' }}>
         <MancalaBoard/>
       </div>
 

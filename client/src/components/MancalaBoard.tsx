@@ -145,6 +145,25 @@ export function MancalaBoard(props: any) {
     }
   }
   
+  async function restartGame() {
+    setIsProcessing(true);
+    try {
+      const response = await fetch('http://localhost:8080/api/game/restart', {
+        method: "POST"
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        setStenen(result.stenenPerVakje);
+        setSpelerAanDeBeurt(result.spelerAanDeBeurt);
+      }
+    } catch (error) {
+      console.error("Could not restart game:", error);
+    } finally {
+      setIsProcessing(false);
+    }
+  }
+  
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: '50px', fontSize: '20px' }}>
@@ -213,7 +232,17 @@ export function MancalaBoard(props: any) {
         <div style={mancalaStyle}>
           {stenen[6]}
         </div>
-      </div>      
+      </div>
+      
+      <div style={{ marginTop: '40px' }}>
+        <button
+          onClick={restartGame}
+          style={{ padding: '10px 20px', fontSize: '18px', cursor: 'pointer' }}
+        >
+          New Game
+        </button>
+      </div>
+      
     </div>
   );
 }

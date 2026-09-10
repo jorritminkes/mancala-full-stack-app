@@ -45,4 +45,8 @@ public class Facade {
         }
         return ((Pocket) eersteVakje).getWinnaar();
     }
+    
+    public void startNieuwSpel() {
+        this.eersteVakje = new Pocket(1);
+    }
 }

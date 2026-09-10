@@ -2,7 +2,7 @@ package mancala.api;
 
 import mancala.domain.Facade;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/game")
@@ -15,19 +15,6 @@ public class GameController {
     public BoardStateDto getGame() {
         return getBoardState();
     }
-
-    // @PostMapping("/move/{positie}")
-    // public BoardStateDto makeMove(@PathVariable int positie) {
-    //     try {
-    //         facade.zet(positie);
-    //         System.out.println("Move executed at position: " + positie);
-    //         return getBoardState();
-    //     } catch (Exception e) {
-    //         System.out.println("Error: " + e.getMessage());
-    //         e.printStackTrace();
-    //         throw new RuntimeException(e);
-    //     }
-    // }
     
     @PostMapping("/move/{positie}")
     public ResponseEntity<?> makeMove(@PathVariable int positie) {
@@ -53,6 +40,17 @@ public class GameController {
                 facade.getWinnaar().isPresent(),
                 facade.getSpelerAanDeBeurt()
         );
+    }
+    
+    @PostMapping("/restart")
+    public ResponseEntity<?> restartGame() {
+        try {
+            facade.startNieuwSpel();
+            System.out.println("Game restarted!");
+            return ResponseEntity.ok(getBoardState());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
 
