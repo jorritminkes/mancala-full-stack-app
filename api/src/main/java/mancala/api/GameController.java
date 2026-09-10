@@ -2,11 +2,7 @@ package mancala.api;
 
 import mancala.domain.Facade;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;;
 
 @RestController
 @RequestMapping("/api/game")
@@ -14,17 +10,34 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
     private Facade facade = new Facade();
+    
+    @GetMapping
+    public BoardStateDto getGame() {
+        return getBoardState();
+    }
 
+    // @PostMapping("/move/{positie}")
+    // public BoardStateDto makeMove(@PathVariable int positie) {
+    //     try {
+    //         facade.zet(positie);
+    //         System.out.println("Move executed at position: " + positie);
+    //         return getBoardState();
+    //     } catch (Exception e) {
+    //         System.out.println("Error: " + e.getMessage());
+    //         e.printStackTrace();
+    //         throw new RuntimeException(e);
+    //     }
+    // }
+    
     @PostMapping("/move/{positie}")
-    public BoardStateDto makeMove(@PathVariable int positie) {
+    public ResponseEntity<?> makeMove(@PathVariable int positie) {
         try {
             facade.zet(positie);
             System.out.println("Move executed at position: " + positie);
-            return getBoardState();
+            return ResponseEntity.ok(getBoardState());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -37,7 +50,8 @@ public class GameController {
         return new BoardStateDto(
                 stenenPerVakje,
                 facade.isSpelAfgelopen(),
-                facade.getWinnaar().isPresent()
+                facade.getWinnaar().isPresent(),
+                facade.getSpelerAanDeBeurt()
         );
     }
 }
@@ -46,10 +60,12 @@ class BoardStateDto {
     public int[] stenenPerVakje;
     public boolean spelAfgelopen;
     public boolean hasWinnaar;
+    public int spelerAanDeBeurt;
 
-    public BoardStateDto(int[] stenenPerVakje, boolean spelAfgelopen, boolean hasWinnaar) {
+    public BoardStateDto(int[] stenenPerVakje, boolean spelAfgelopen, boolean hasWinnaar, int spelerAanDeBeurt) {
         this.stenenPerVakje = stenenPerVakje;
         this.spelAfgelopen = spelAfgelopen;
         this.hasWinnaar = hasWinnaar;
+        this.spelerAanDeBeurt = spelerAanDeBeurt;
     }
 }

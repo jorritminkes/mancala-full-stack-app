@@ -3,11 +3,11 @@ import { MancalaBoard } from "./MancalaBoard";
 
 export function GamePage(props: any) {
 
-  let spelerAanDeBeurt = 1;
+  // let spelerAanDeBeurt = 1;
 
   return (
     <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'sans-serif' }}>
-      <h1>Speler {spelerAanDeBeurt} is aan de beurt</h1>
+      {/* <h1>Speler {spelerAanDeBeurt} is aan de beurt</h1> */}
       
       <div style = {{ marginTop: '50px', marginBottom: '50px' }}>
         <MancalaBoard/>

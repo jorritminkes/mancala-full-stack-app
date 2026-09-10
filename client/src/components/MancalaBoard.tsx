@@ -1,11 +1,59 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function MancalaBoard(props: any) {
   
-  // const { bord, klikOpPocket } = props;
-  // const stenen = bord.stenenPerVakje;
-  const [stenen, setStenen] = useState([4,4,4,4,4,4, 0, 4,4,4,4,4,4, 0]);
+  // const [stenen, setStenen] = useState([4,4,4,4,4,4, 0, 4,4,4,4,4,4, 0]);
+  const [stenen, setStenen] = useState<number[]>([]);
+  const [spelerAanDeBeurt, setSpelerAanDeBeurt] = useState<number>(1);
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  
+  async function loadInitialState() {
+    setIsLoading(true);
+    setHasError(false);
+    
+    try {
+      const response = await fetch('http://localhost:8080/api/game');
+      if (response.ok) {
+        const result = await response.json();
+        setStenen(result.stenenPerVakje);
+        setSpelerAanDeBeurt(result.spelerAanDeBeurt);
+      } else {
+        setHasError(true);
+      }
+    } catch (error) {
+      console.error("Could not fetch the current game state:", error);
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+  
+  useEffect(() => {
+    loadInitialState();
+  }, []);
+  
+  // useEffect(() => {
+  //   async function loadInitialState() {
+  //     try {
+  //       const response = await fetch('http://localhost:8080/api/game');
+  //       if (response.ok) {
+  //         const result = await response.json();
+  //         setStenen(result.stenenPerVakje);
+  //       } else {
+  //         setHasError(true);
+  //       }
+  //     } catch (error) {
+  //       console.error("Could not fetch the current game state:", error);
+  //       setHasError(true);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }
+  //   loadInitialState();
+  // }, []);
   
   const outerPadding = 20;
   const gap = 20;
@@ -52,38 +100,69 @@ export function MancalaBoard(props: any) {
     
     setIsProcessing(true);
     console.log("Clicked pocket", pocketPositie);
+    
     try {
         const response = await fetch(`http://localhost:8080/api/game/move/${pocketPositie}`, {
             method: "POST"
         });
         
         if (!response.ok) {
-          let errorMessage = "Move rejected!";
-          try {
-            const errorData = await response.json();
-            errorMessage = errorData.message || errorMessage;
-          } catch {
-            errorMessage = await response.text() || errorMessage;
-          }
-          throw new Error(errorMessage);
+          // let errorMessage = "Move rejected by domain!";
+          const errorMessage = await response.text();
+          throw new Error(errorMessage || "Move rejected by domain!");
+          // try {
+          //   const errorData = await response.json();
+          //   errorMessage = errorData.message || errorMessage;
+          // } catch {
+          //   errorMessage = await response.text() || errorMessage;
+          // }
+          // throw new Error(errorMessage);
         }
         
         const result = await response.json();
         console.log("Board updated:", result);
         setStenen(result.stenenPerVakje);
+        setSpelerAanDeBeurt(result.spelerAanDeBeurt);
         
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error:", error);
-        alert("Invalid move!")
+        // alert(`Speler ${spelerAanDeBeurt} aan de beurt!`)
+        // alert(error.message || "Invalid move!");
+        alert(error.message);
     } finally {
       setIsProcessing(false);
     }
+  }
+  
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '50px', fontSize: '20px' }}>
+        Loading board...
+      </div>
+    )
+  }
+  
+  if (hasError || stenen.length === 0) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '50px', color: 'red' }}>
+        <h2>Could not load game data from the server. Reload with button below.</h2>
+        <button
+          onClick={loadInitialState}
+          >
+            Reload board
+        </button>
+      </div>
+    )
   }
 
   
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', padding: `${outerPadding}px` }}>
+    // <div style={{ display: 'flex', justifyContent: 'center', padding: `${outerPadding}px` }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: `${outerPadding}px` }}>
+      <h1 style={{ marginBottom: '30px', color: 'white' }}>
+        Speler {spelerAanDeBeurt} is aan de beurt
+      </h1>
       
       <div style={{
         display: 'flex',
