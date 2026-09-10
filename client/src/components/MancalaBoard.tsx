@@ -6,6 +6,7 @@ export function MancalaBoard(props: any) {
   const [stenen, setStenen] = useState<number[]>([]);
   const [spelerAanDeBeurt, setSpelerAanDeBeurt] = useState<number>(1);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [spelAfgelopen, setSpelAfgelopen] = useState(false);
   
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -35,26 +36,6 @@ export function MancalaBoard(props: any) {
     loadInitialState();
   }, []);
   
-  // useEffect(() => {
-  //   async function loadInitialState() {
-  //     try {
-  //       const response = await fetch('http://localhost:8080/api/game');
-  //       if (response.ok) {
-  //         const result = await response.json();
-  //         setStenen(result.stenenPerVakje);
-  //       } else {
-  //         setHasError(true);
-  //       }
-  //     } catch (error) {
-  //       console.error("Could not fetch the current game state:", error);
-  //       setHasError(true);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-  //   loadInitialState();
-  // }, []);
-  
   const outerPadding = 20;
   const gap = 20;
   const vakjeWidth = 60;
@@ -80,8 +61,6 @@ export function MancalaBoard(props: any) {
       fontSize: '18px',
       transition: 'opacity 0.3s',
       // boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.4)'
-      // cursor: isProcessing ? 'not-allowed' : 'pointer',
-      // opacity: isProcessing ? 0.7 : 1,
       cursor: isPlayable ? 'pointer' : 'not-allowed',
       opacity: isPlayable ? 1 : 0.7,
     };
@@ -118,27 +97,18 @@ export function MancalaBoard(props: any) {
         });
         
         if (!response.ok) {
-          // let errorMessage = "Move rejected by domain!";
           const errorMessage = await response.text();
           throw new Error(errorMessage || "Move rejected by domain!");
-          // try {
-          //   const errorData = await response.json();
-          //   errorMessage = errorData.message || errorMessage;
-          // } catch {
-          //   errorMessage = await response.text() || errorMessage;
-          // }
-          // throw new Error(errorMessage);
         }
         
         const result = await response.json();
         console.log("Board updated:", result);
         setStenen(result.stenenPerVakje);
         setSpelerAanDeBeurt(result.spelerAanDeBeurt);
+        setSpelAfgelopen(result.spelAfgelopen);
         
     } catch (error: any) {
         console.error("Error:", error);
-        // alert(`Speler ${spelerAanDeBeurt} aan de beurt!`)
-        // alert(error.message || "Invalid move!");
         alert(error.message);
     } finally {
       setIsProcessing(false);
