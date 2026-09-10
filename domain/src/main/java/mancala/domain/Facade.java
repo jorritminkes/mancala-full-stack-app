@@ -42,20 +42,28 @@ public class Facade {
         return ((Pocket) eersteVakje).getWinnaar();
     }
     
+    public Optional<Integer> getWinnaarNummer() {
+        Optional<Speler> winnaar = getWinnaar();
+        if (winnaar.isPresent()) {
+            return Optional.of(winnaar.get().getSpelerNummer());
+        }
+        return Optional.empty();
+    }
+    
     public void startNieuwSpel() {
         this.eersteVakje = new Pocket(1);
     }
     
-    public String getStatusBericht() {
-        if (isSpelAfgelopen()) {
-            Optional<Speler> winnaar = getWinnaar();
-            if (winnaar.isPresent()) {
-                return "Player " + winnaar.get().getSpelerNummer() + " has won!";
-            } else {
-                return "It is a tie!";
-            }
-        } else {
-            return "Player " + getSpelerAanDeBeurt() + " is to turn!";
-        }
-    }
+    // public String getStatusBericht() {
+    //     if (isSpelAfgelopen()) {
+    //         Optional<Speler> winnaar = getWinnaar();
+    //         if (winnaar.isPresent()) {
+    //             return "Player " + winnaar.get().getSpelerNummer() + " has won!";
+    //         } else {
+    //             return "It is a tie!";
+    //         }
+    //     } else {
+    //         return "Player " + getSpelerAanDeBeurt() + " is to turn!";
+    //     }
+    // }
 }

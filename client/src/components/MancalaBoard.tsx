@@ -62,7 +62,7 @@ export function MancalaBoard(props: any) {
       fontSize: '18px',
       transition: 'opacity 0.3s',
       // boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.4)'
-      cursor: isPlayable ? 'pointer' : 'not-allowed',
+      cursor: isPlayable ? 'pointer' : 'default',
       opacity: isPlayable ? 1 : 0.7,
     };
     

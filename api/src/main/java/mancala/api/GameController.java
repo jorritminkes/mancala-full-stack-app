@@ -35,13 +35,27 @@ public class GameController {
         for (int i = 1; i <= 14; i++) {
             stenenPerVakje[i - 1] = facade.getAantalStenen(i);
         }
+        
+        boolean isSpelAfgelopen = facade.isSpelAfgelopen();
+        String statusBericht;
+        
+        if (isSpelAfgelopen) {
+            Optional<Integer> winnaarNummer = facade.getWinnaarNummer();
+            if (winnaarNummer.isPresent()) {
+                statusBericht = "Player " + winnaarNummer.get() + " has won!";
+            } else {
+                statusBericht = "It's a tie!";
+            }
+        } else {
+            statusBericht = "Player " + facade.getSpelerAanDeBeurt() + " is to turn!";
+        }
 
         return new BoardStateDto(
                 stenenPerVakje,
                 facade.isSpelAfgelopen(),
                 facade.getWinnaar().isPresent(),
                 facade.getSpelerAanDeBeurt(),
-                facade.getStatusBericht()
+                statusBericht
         );
     }
     
