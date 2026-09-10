@@ -107,14 +107,16 @@ export function MancalaBoard(props: any) {
         });
         
         if (!response.ok) {
-          let errorMessage = "Move rejected by domain!";
-          try {
-            const errorData = await response.json();
-            errorMessage = errorData.message || errorMessage;
-          } catch {
-            errorMessage = await response.text() || errorMessage;
-          }
-          throw new Error(errorMessage);
+          // let errorMessage = "Move rejected by domain!";
+          const errorMessage = await response.text();
+          throw new Error(errorMessage || "Move rejected by domain!");
+          // try {
+          //   const errorData = await response.json();
+          //   errorMessage = errorData.message || errorMessage;
+          // } catch {
+          //   errorMessage = await response.text() || errorMessage;
+          // }
+          // throw new Error(errorMessage);
         }
         
         const result = await response.json();
@@ -125,7 +127,8 @@ export function MancalaBoard(props: any) {
     } catch (error: any) {
         console.error("Error:", error);
         // alert(`Speler ${spelerAanDeBeurt} aan de beurt!`)
-        alert(error.message || "Invalid move!");
+        // alert(error.message || "Invalid move!");
+        alert(error.message);
     } finally {
       setIsProcessing(false);
     }

@@ -2,6 +2,7 @@ package mancala.api;
 
 import mancala.domain.Facade;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;;
 
 @RestController
 @RequestMapping("/api/game")
@@ -15,16 +16,28 @@ public class GameController {
         return getBoardState();
     }
 
+    // @PostMapping("/move/{positie}")
+    // public BoardStateDto makeMove(@PathVariable int positie) {
+    //     try {
+    //         facade.zet(positie);
+    //         System.out.println("Move executed at position: " + positie);
+    //         return getBoardState();
+    //     } catch (Exception e) {
+    //         System.out.println("Error: " + e.getMessage());
+    //         e.printStackTrace();
+    //         throw new RuntimeException(e);
+    //     }
+    // }
+    
     @PostMapping("/move/{positie}")
-    public BoardStateDto makeMove(@PathVariable int positie) {
+    public ResponseEntity<?> makeMove(@PathVariable int positie) {
         try {
             facade.zet(positie);
             System.out.println("Move executed at position: " + positie);
-            return getBoardState();
+            return ResponseEntity.ok(getBoardState());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
