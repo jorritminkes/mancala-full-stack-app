@@ -6,7 +6,7 @@ export function MancalaBoard(props: any) {
   const [stenen, setStenen] = useState<number[]>([]);
   const [spelerAanDeBeurt, setSpelerAanDeBeurt] = useState<number>(1);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [spelAfgelopen, setSpelAfgelopen] = useState(false);
+  const [statusBericht, setStatusBericht] = useState<string>("");
   
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -19,6 +19,7 @@ export function MancalaBoard(props: any) {
       const response = await fetch('http://localhost:8080/api/game');
       if (response.ok) {
         const result = await response.json();
+        setStatusBericht(result.statusBericht);
         setStenen(result.stenenPerVakje);
         setSpelerAanDeBeurt(result.spelerAanDeBeurt);
       } else {
@@ -103,9 +104,9 @@ export function MancalaBoard(props: any) {
         
         const result = await response.json();
         console.log("Board updated:", result);
+        setStatusBericht(result.statusBericht);
         setStenen(result.stenenPerVakje);
         setSpelerAanDeBeurt(result.spelerAanDeBeurt);
-        setSpelAfgelopen(result.spelAfgelopen);
         
     } catch (error: any) {
         console.error("Error:", error);
@@ -124,6 +125,7 @@ export function MancalaBoard(props: any) {
       
       if (response.ok) {
         const result = await response.json();
+        setStatusBericht(result.statusBericht);
         setStenen(result.stenenPerVakje);
         setSpelerAanDeBeurt(result.spelerAanDeBeurt);
       }
@@ -160,8 +162,11 @@ export function MancalaBoard(props: any) {
   return (
     // <div style={{ display: 'flex', justifyContent: 'center', padding: `${outerPadding}px` }}>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: `${outerPadding}px` }}>
-      <h1 style={{ marginBottom: '30px', color: 'white' }}>
+      {/* <h1 style={{ marginBottom: '30px', color: 'white' }}>
         Speler {spelerAanDeBeurt} is aan de beurt
+      </h1> */}
+      <h1 style={{ marginBottom: '30px', color: 'white' }}>
+        {statusBericht}
       </h1>
       
       <div style={{

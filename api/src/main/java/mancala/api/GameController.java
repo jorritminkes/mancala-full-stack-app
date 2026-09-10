@@ -1,6 +1,8 @@
 package mancala.api;
 
 import mancala.domain.Facade;
+import java.util.Optional;
+import mancala.domain.Speler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -38,7 +40,8 @@ public class GameController {
                 stenenPerVakje,
                 facade.isSpelAfgelopen(),
                 facade.getWinnaar().isPresent(),
-                facade.getSpelerAanDeBeurt()
+                facade.getSpelerAanDeBeurt(),
+                facade.getStatusBericht()
         );
     }
     
@@ -59,11 +62,13 @@ class BoardStateDto {
     public boolean spelAfgelopen;
     public boolean hasWinnaar;
     public int spelerAanDeBeurt;
+    public String statusBericht;
 
-    public BoardStateDto(int[] stenenPerVakje, boolean spelAfgelopen, boolean hasWinnaar, int spelerAanDeBeurt) {
+    public BoardStateDto(int[] stenenPerVakje, boolean spelAfgelopen, boolean hasWinnaar, int spelerAanDeBeurt, String statusBericht) {
         this.stenenPerVakje = stenenPerVakje;
         this.spelAfgelopen = spelAfgelopen;
         this.hasWinnaar = hasWinnaar;
         this.spelerAanDeBeurt = spelerAanDeBeurt;
+        this.statusBericht = statusBericht;
     }
 }

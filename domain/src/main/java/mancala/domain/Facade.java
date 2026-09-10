@@ -34,10 +34,6 @@ public class Facade {
     public boolean isSpelAfgelopen() {
         return ((Pocket) eersteVakje).isSpelAfgelopen();
     }
-    
-//    public Optional<Speler> getWinnaar() {
-//        return ((Pocket) eersteVakje).getWinnaar();
-//    }
 
     public Optional<Speler> getWinnaar() {
         if (!isSpelAfgelopen()) {
@@ -48,5 +44,18 @@ public class Facade {
     
     public void startNieuwSpel() {
         this.eersteVakje = new Pocket(1);
+    }
+    
+    public String getStatusBericht() {
+        if (isSpelAfgelopen()) {
+            Optional<Speler> winnaar = getWinnaar();
+            if (winnaar.isPresent()) {
+                return "Player " + winnaar.get().getSpelerNummer() + " has won!";
+            } else {
+                return "It is a tie!";
+            }
+        } else {
+            return "Player " + getSpelerAanDeBeurt() + " is to turn!";
+        }
     }
 }
