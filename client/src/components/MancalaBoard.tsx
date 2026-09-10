@@ -60,21 +60,32 @@ export function MancalaBoard(props: any) {
   const vakjeWidth = 60;
   const boardHeight = gap + 2 * vakjeWidth;
   
-  const pocketStyle = {
-    width: `${vakjeWidth}px`,
-    height: `${vakjeWidth}px`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    // border: '1px solid #ccc',
-    backgroundColor: '#8d5b4c',
-    borderRadius: '50%',
-    color: '#ffffff',
-    // fontWeight: 'bold',
-    fontSize: '18px',
-    // boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.4)'
-    cursor: isProcessing ? 'not-allowed' : 'pointer',
-    opacity: isProcessing ? 0.7 : 1,
+  const pocketStyle = (positie: number) => {
+    const isPlayer1Pocket = positie >= 1 && positie <= 6;
+    const isPlayer2Pocket = positie >= 8 && positie <= 13;
+    
+    const isMyTurn = (spelerAanDeBeurt === 1 && isPlayer1Pocket) || (spelerAanDeBeurt === 2 && isPlayer2Pocket);
+    const isPlayable = isMyTurn && !isProcessing;
+    return {
+      width: `${vakjeWidth}px`,
+      height: `${vakjeWidth}px`,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      // border: '1px solid #ccc',
+      backgroundColor: '#8d5b4c',
+      borderRadius: '50%',
+      color: '#ffffff',
+      // fontWeight: 'bold',
+      fontSize: '18px',
+      transition: 'opacity 0.3s',
+      // boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.4)'
+      // cursor: isProcessing ? 'not-allowed' : 'pointer',
+      // opacity: isProcessing ? 0.7 : 1,
+      cursor: isPlayable ? 'pointer' : 'not-allowed',
+      opacity: isPlayable ? 1 : 0.7,
+    };
+    
   }
   
   const mancalaStyle = {
@@ -182,20 +193,20 @@ export function MancalaBoard(props: any) {
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: `${gap}px` }}>
           <div style={{ display: 'flex', gap: `${gap}px` }}>
-            <div style={pocketStyle} onClick={() => playMove(13)}>{stenen[12]}</div>
-            <div style={pocketStyle} onClick={() => playMove(12)}>{stenen[11]}</div>
-            <div style={pocketStyle} onClick={() => playMove(11)}>{stenen[10]}</div>
-            <div style={pocketStyle} onClick={() => playMove(10)}>{stenen[9]}</div>
-            <div style={pocketStyle} onClick={() => playMove(9)}>{stenen[8]}</div>
-            <div style={pocketStyle} onClick={() => playMove(8)}>{stenen[7]}</div>
+            <div style={pocketStyle(13)} onClick={() => playMove(13)}>{stenen[12]}</div>
+            <div style={pocketStyle(12)} onClick={() => playMove(12)}>{stenen[11]}</div>
+            <div style={pocketStyle(11)} onClick={() => playMove(11)}>{stenen[10]}</div>
+            <div style={pocketStyle(10)} onClick={() => playMove(10)}>{stenen[9]}</div>
+            <div style={pocketStyle(9)} onClick={() => playMove(9)}>{stenen[8]}</div>
+            <div style={pocketStyle(8)} onClick={() => playMove(8)}>{stenen[7]}</div>
           </div>
           <div style={{ display: 'flex', gap: `${gap}px` }}>
-            <div style={pocketStyle} onClick={() => playMove(1)}>{stenen[0]}</div>
-            <div style={pocketStyle} onClick={() => playMove(2)}>{stenen[1]}</div>
-            <div style={pocketStyle} onClick={() => playMove(3)}>{stenen[2]}</div>
-            <div style={pocketStyle} onClick={() => playMove(4)}>{stenen[3]}</div>
-            <div style={pocketStyle} onClick={() => playMove(5)}>{stenen[4]}</div>
-            <div style={pocketStyle} onClick={() => playMove(6)}>{stenen[5]}</div>
+            <div style={pocketStyle(1)} onClick={() => playMove(1)}>{stenen[0]}</div>
+            <div style={pocketStyle(2)} onClick={() => playMove(2)}>{stenen[1]}</div>
+            <div style={pocketStyle(3)} onClick={() => playMove(3)}>{stenen[2]}</div>
+            <div style={pocketStyle(4)} onClick={() => playMove(4)}>{stenen[3]}</div>
+            <div style={pocketStyle(5)} onClick={() => playMove(5)}>{stenen[4]}</div>
+            <div style={pocketStyle(6)} onClick={() => playMove(6)}>{stenen[5]}</div>
           </div>
         </div>
         
