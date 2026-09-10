@@ -3,17 +3,17 @@ package mancala.api;
 import mancala.domain.Facade;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 @RequestMapping("/api/game")
 @CrossOrigin(origins = "http://localhost:5173")
 public class GameController {
 
     private Facade facade = new Facade();
+    
+    @GetMapping
+    public BoardStateDto getGame() {
+        return getBoardState();
+    }
 
     @PostMapping("/move/{positie}")
     public BoardStateDto makeMove(@PathVariable int positie) {
@@ -37,7 +37,8 @@ public class GameController {
         return new BoardStateDto(
                 stenenPerVakje,
                 facade.isSpelAfgelopen(),
-                facade.getWinnaar().isPresent()
+                facade.getWinnaar().isPresent(),
+                facade.getSpelerAanDeBeurt()
         );
     }
 }
@@ -46,10 +47,12 @@ class BoardStateDto {
     public int[] stenenPerVakje;
     public boolean spelAfgelopen;
     public boolean hasWinnaar;
+    public int spelerAanDeBeurt;
 
-    public BoardStateDto(int[] stenenPerVakje, boolean spelAfgelopen, boolean hasWinnaar) {
+    public BoardStateDto(int[] stenenPerVakje, boolean spelAfgelopen, boolean hasWinnaar, int spelerAanDeBeurt) {
         this.stenenPerVakje = stenenPerVakje;
         this.spelAfgelopen = spelAfgelopen;
         this.hasWinnaar = hasWinnaar;
+        this.spelerAanDeBeurt = spelerAanDeBeurt;
     }
 }

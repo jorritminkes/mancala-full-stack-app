@@ -21,6 +21,16 @@ public class Facade {
         return eersteVakje.getVakjeOpPositie(positie).getAantalStenen();
     }
     
+    public int getSpelerAanDeBeurt() {
+        Speler speler1 = eersteVakje.getEigenaar();
+        
+        if (speler1.isAanZet()) {
+            return speler1.getSpelerNummer();
+        } else {
+            return speler1.getTegenstander().getSpelerNummer();
+        }
+    }
+    
     public boolean isSpelAfgelopen() {
         return ((Pocket) eersteVakje).isSpelAfgelopen();
     }
